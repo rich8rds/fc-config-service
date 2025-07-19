@@ -1,0 +1,26 @@
+services:
+  configs-service:
+    build: ./
+    container_name: configs-service
+    ports:
+      - "8888:8888"
+    expose:
+      - "8888"
+    networks:
+      - fcNet
+    env_file:
+      - ./.env
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - OTEL_TRACES_EXPORTER=logging
+      - OTEL_METRICS_EXPORTER=logging
+      - OTEL_LOGS_EXPORTER=logging
+      - OTEL_METRIC_EXPORT_INTERVAL=15000
+      - TZ=Africa/Lagos
+      - EUREKA_HOSTNAME=discovery-service
+
+networks:
+  fcNet:
+    name: fcNet
+    external: true
+    driver: bridge
