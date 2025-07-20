@@ -3,6 +3,10 @@ services:
     image: "${ECR_SERVER}/${ECR_REPOSITORY}:configs-service-${ENV}-${DATE}-${SHORT_SHA}"
 #    build: ./
     container_name: configs-service
+    healthcheck:
+      test: [ "CMD", 'sh', '-c', 'echo -e "Checking service availability"; while ! nc -z "discovery-service" 4080; do sleep 1; printf "-"; done; echo -e " >> Service has started";' ]
+      timeout: 10s
+      retries: 10
     ports:
       - "4080:4080"
     expose:
@@ -11,15 +15,16 @@ services:
       - fcNet
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - OTEL_TRACES_EXPORTER=logging
-      - OTEL_METRICS_EXPORTER=logging
-      - OTEL_LOGS_EXPORTER=logging
-      - OTEL_METRIC_EXPORT_INTERVAL=15000
-      - TZ=Africa/Lagos
-      - EUREKA_HOSTNAME=discovery-service
+      - SPRING_CONFIG_IMPORT=${SPRING_CONFIG_IMPORT}
+      - OTEL_TRACES_EXPORTER=${OTEL_TRACES_EXPORTER}
+      - OTEL_METRICS_EXPORTER=${OTEL_METRICS_EXPORTER}
+      - OTEL_LOGS_EXPORTER=${OTEL_LOGS_EXPORTER}
+      - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
+      - TZ=${TIMEZONE}
+      - EUREKA_HOSTNAME=${EUREKA_HOSTNAME}
 
 networks:
   fcNet:
     name: fcNet
-#    external: true
+    external: true
     driver: bridge

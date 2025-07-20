@@ -182,7 +182,7 @@
 			</plugin>
 
 		</plugins>
-		<finalName>DiscoveryService</finalName>
+		<finalName>ConfigsService</finalName>
 	</build>
 
 
