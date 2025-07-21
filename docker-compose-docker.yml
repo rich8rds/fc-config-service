@@ -1,19 +1,18 @@
 services:
   configs-service:
-    build: ./
+    image: ${ECR_REPOSITORY}/configs-service:latest
+#    build: ./
     container_name: configs-service
     healthcheck:
       test: [ "CMD", 'sh', '-c', 'echo -e "Checking service availability"; while ! nc -z "discovery-service" 4080; do sleep 1; printf "-"; done; echo -e " >> Service has started";' ]
       timeout: 10s
       retries: 10
     ports:
-      - "8888:8888"
+      - "4080:4080"
     expose:
-      - "8888"
+      - "4080"
     networks:
       - fcNet
-    env_file:
-      - ./.env
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CONFIG_IMPORT=${SPRING_CONFIG_IMPORT}

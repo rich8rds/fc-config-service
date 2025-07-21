@@ -10,46 +10,21 @@
 	<description>Configuration server for favourite-collections service</description>
 	<packaging>jar</packaging>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.3</version>
+		<relativePath/>
+	</parent>
+
 	<properties>
 		<java.version>17</java.version>
-		<java.version.target>17</java.version.target>
-		<spotless.version>2.35.0</spotless.version>
-		<spring-boot-admin.version>3.3.2</spring-boot-admin.version>
+		<spring-cloud.version>2025.0.0</spring-cloud.version>
+		<spotless.version>2.43.0</spotless.version>
 		<spring.boot.maven.plugin.version>3.3.2</spring.boot.maven.plugin.version>
-		<spring.boot.maven.compiler.plugin.version>3.13.0</spring.boot.maven.compiler.plugin.version>
-		<spring.boot.dependencies.version>3.3.2</spring.boot.dependencies.version>
-		<spring-cloud.version>2023.0.1</spring-cloud.version>
 		<jib.maven.plugin.version>3.4.3</jib.maven.plugin.version>
-		<exec.maven.plugin.version>3.1.0</exec.maven.plugin.version>
-		<spring.doc.openapi.version>2.1.0</spring.doc.openapi.version>
-		<org.zolando.version>0.27.1</org.zolando.version>
+		<spring-boot-admin.version>3.3.2</spring-boot-admin.version>
 	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>de.codecentric</groupId>
-				<artifactId>spring-boot-admin-dependencies</artifactId>
-				<version>${spring-boot-admin.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.dependencies.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -58,11 +33,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -70,20 +49,44 @@
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-dependencies</artifactId>
+				<version>${spring-boot-admin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${spring.boot.maven.compiler.plugin.version}</version>
 				<configuration>
 					<source>${java.version}</source>
-					<target>${java.version.target}</target>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -131,7 +134,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.maven.plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -150,10 +152,10 @@
 					<from>
 						<image>eclipse-temurin:${java.version}-jre</image>
 					</from>
-					<to>${project.artifactId}:${project.version}</to>
-					<!--          <to>-->
-					<!--            <image>registry.hub.docker.com/rich8rds/${project.artifactId}:latest</image>-->
-					<!--          </to>-->
+					<!--          <to>${project.artifactId}:${project.version}</to>-->
+					<to>
+						<image>rich8rds/${project.artifactId}:latest</image>
+					</to>
 					<container>
 						<jvmFlags>
 							<jvmFlag>-javaagent:/opentelemetry-javaagent.jar</jvmFlag>
