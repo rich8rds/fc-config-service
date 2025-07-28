@@ -1,7 +1,6 @@
 services:
   configs-service:
     build: ./
-#    image: ${ECR_REPOSITORY}/fc-configs-service:latest
     container_name: configs-service
     healthcheck:
       test: [ "CMD", 'sh', '-c', 'echo -e "Checking service availability"; while ! nc -z "configs-service" 8888; do sleep 1; printf "-"; done; echo -e " >> Service has started";' ]
