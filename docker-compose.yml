@@ -12,24 +12,16 @@ services:
       - "8888"
     networks:
       - fcNet
-      - jaegerNet
     env_file:
       - ./.env
     environment:
       TZ: ${TIMEZONE}
-      OTEL_SERVICE_NAME: "configs-service"
       SPRING_PROFILES_ACTIVE: "docker"
       OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES}
       OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL}
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
-      OTEL_METRIC_EXPORT_INTERVAL: ${OTEL_METRIC_EXPORT_INTERVAL}
 
 networks:
   fcNet:
     name: fcNet
     external: true
-    driver: bridge
-  jaegerNet:
-    name: jaegerNet
-    external: true
-    driver: bridge
